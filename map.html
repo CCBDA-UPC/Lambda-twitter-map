@@ -16,11 +16,11 @@
 </head>
 <body>
 <!-- this goes in the <body> -->
-<div id="error"></div>
+<div class="danger" id="error" style="display: none;"></div>
 <div id="map"></div>
 <script>
     (function ($) {
-        var apiUrl = 'YOUR-URL';
+        var apiUrl = 'https://5syavv9s09.execute-api.eu-west-1.amazonaws.com/test/map';
 
         function draw_map(s3_url) {
             var mytiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -62,7 +62,7 @@
 
             },
             error: function (error) {
-                $('#error').append('<p><strong>Error:</strong>Unknown error</p>');
+                $('#error').toggle().append('<p><strong>Error:</strong>Unknown error</p>');
 
             }
 
