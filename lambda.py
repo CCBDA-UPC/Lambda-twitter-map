@@ -116,22 +116,43 @@ def lambda_handler(event, context):
         except Exception as e:
             return error_response((e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
 
+
 ### Do not copy the Python code below this comment
 ### Use different examples to debug and test the code
 
-get_event1 = {
-    "httpMethod": "GET",
-    "queryStringParameters": {
-        "from": "2018-04-16-12-05",
-        "to": "2018-04-16-12-10"
-    }
-}
-
+print('--------------------GET event test')
 get_event = {
     "httpMethod": "GET",
     "queryStringParameters": {
         "from": "2018-04-16-10-10"
-    },
+    }
 }
+result = lambda_handler(get_event, None)
+print('--------------------RESULT')
+print(json.dumps(result, indent=2))
+print('--------------------RESULT body')
+print(json.dumps(json.loads(result['body']), indent=2))
 
-print(json.dumps(lambda_handler(get_event, None), indent=2))
+print('--------------------GET event test')
+get_event = {
+    "httpMethod": "GET",
+    "queryStringParameters": {
+        "to": "2018-04-16-15-10"
+    }
+}
+result = lambda_handler(get_event, None)
+print('--------------------RESULT')
+print(json.dumps(result, indent=2))
+print('--------------------RESULT body')
+print(json.dumps(json.loads(result['body']), indent=2))
+
+print('--------------------GET event test')
+get_event = {
+    "httpMethod": "GET",
+    "queryStringParameters":None
+}
+result = lambda_handler(get_event, None)
+print('--------------------RESULT')
+print(json.dumps(result, indent=2))
+print('--------------------RESULT body')
+print(json.dumps(json.loads(result['body']), indent=2))
