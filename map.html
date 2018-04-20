@@ -4,7 +4,7 @@
     <title>Quick Start - Leaflet</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shorcut icon" href="https://raco.fib.upc.edu/racoEstatic/img/favicon.ico" />
+    <link rel="shorcut icon" href="https://raco.fib.upc.edu/racoEstatic/img/favicon.ico"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
@@ -57,18 +57,14 @@
                 if (result.ok) {
                     draw_map(result.s3_url);
                 } else {
-                    $('#error').append('<p><strong>Error:</strong> ' + result.error + '</p>');
+                    $('#error').toggle().append('<p><strong>Error:</strong> ' + result.error + '</p>');
                 }
-
             },
             error: function (error) {
                 $('#error').toggle().append('<p><strong>Error:</strong>Unknown error</p>');
 
             }
-
         });
-
-
     })(jQuery);
 </script>
 </body>
