@@ -1,12 +1,13 @@
 import boto3
 import json
 import datetime
+import os
 from botocore.errorfactory import ClientError
 
 print('Loading function')
 dynamo = boto3.client('dynamodb')
-table = 'twitter-geo'
-bucket = 'ccbda-upc-web'
+TABLE = os.environ['TABLE']
+BUCKET = os.environ['BUCKET']
 
 
 def error_response(message):
@@ -74,22 +75,22 @@ def lambda_handler(event, context):
     filename = 'twitter/%s_%s.json' % (params['from'] if 'from' in params else 'infinite', params['to'])
     s3 = boto3.client('s3')
     try:
-        s3.head_object(Bucket=bucket, Key=filename)
+        s3.head_object(Bucket=BUCKET, Key=filename)
         # The json file already been created
-        return success_response('%s/%s/%s' % (s3.meta.endpoint_url, bucket, filename))
+        return success_response('%s/%s/%s' % (s3.meta.endpoint_url, BUCKET, filename))
     except ClientError:
         # Not found
         try:
             if FilterExpression:
                 tweets = dynamo.scan(
-                    TableName=table,
+                    TableName=TABLE,
                     ProjectionExpression='c0, c1',
                     FilterExpression=' and '.join(FilterExpression),
                     ExpressionAttributeValues=ExpressionAttributeValues
                 )
             else:
                 tweets = dynamo.scan(
-                    TableName=table,
+                    TableName=TABLE,
                     ProjectionExpression='c0, c1'
                 )
 
@@ -109,10 +110,10 @@ def lambda_handler(event, context):
                 geo_data['features'].append(geo_json_feature)
 
             s3 = boto3.resource('s3')
-            s3.Object(bucket, filename).put(Body=json.dumps(geo_data, indent=4))
-            s3.ObjectAcl(bucket, filename).put(ACL='public-read')
+            s3.Object(BUCKET, filename).put(Body=json.dumps(geo_data, indent=4))
+            s3.ObjectAcl(BUCKET, filename).put(ACL='public-read')
 
-            return success_response('%s/%s/%s' % (s3.meta.client.meta.endpoint_url, bucket, filename))
+            return success_response('%s/%s/%s' % (s3.meta.client.meta.endpoint_url, BUCKET, filename))
         except Exception as e:
             return error_response((e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
 
